@@ -198,6 +198,26 @@ createChatController('chatInput2', 'chatSend2', 'chatMessages2');        // full
 // RFQ FORM — real submission to backend (POST {API_BASE}/rfq)
 // The backend saves the request and notifies Telegram + Email.
 // ============================================================
+// ============================================================
+// RFQ FORM — urgency card + select visual feedback
+// (radios/selects work functionally without this; this just
+// keeps a `.is-selected` class in sync as a fallback for older
+// browsers that don't support the CSS :has() selector)
+// ============================================================
+document.querySelectorAll('.urg-option').forEach((label) => {
+  const input = label.querySelector('input[type="radio"]');
+  if (!input) return;
+  const sync = () => {
+    label.parentElement.querySelectorAll('.urg-option').forEach((l) => l.classList.remove('is-selected'));
+    if (input.checked) label.classList.add('is-selected');
+  };
+  input.addEventListener('change', () => {
+    label.parentElement.querySelectorAll('.urg-option').forEach((l) => l.classList.remove('is-selected'));
+    label.classList.add('is-selected');
+  });
+  sync();
+});
+
 document.getElementById('rfqForm')?.addEventListener('submit', async function(e) {
   e.preventDefault();
   const form = this;
