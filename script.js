@@ -107,13 +107,27 @@ document.getElementById('menuBtn')?.addEventListener('click', () => {
 // ============================================================
 let currentLang = 'ru';
 
-function createChatController(inputId, sendId, messagesId) {
+const MAX_ATTACHMENT_MB = 10;
+const ALLOWED_ATTACHMENT_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+
+function attachLabel() {
+  return currentLang === 'en' ? 'Attach packing list, invoice, MSDS...' :
+    currentLang === 'uz' ? "Packing list, invoys, MSDS va h.k. biriktiring" :
+    currentLang === 'zh' ? '附上包装单、发票、MSDS等' :
+    'Прикрепите упаковочный лист, инвойс, MSDS и т.д.';
+}
+
+function createChatController(inputId, sendId, messagesId, fileId, attachBtnId, previewId) {
   const input = document.getElementById(inputId);
   const send = document.getElementById(sendId);
   const messages = document.getElementById(messagesId);
+  const fileInput = document.getElementById(fileId);
+  const attachBtn = document.getElementById(attachBtnId);
+  const preview = document.getElementById(previewId);
   if (!input || !send || !messages) return null;
 
   const history = []; // [{role:'user'|'assistant', content:'...'}]
+  let pendingFile = null; // File object staged for the next message
 
   function addMessage(text, isUser = false) {
     const div = document.createElement('div');
@@ -125,31 +139,117 @@ function createChatController(inputId, sendId, messagesId) {
     messages.scrollTop = messages.scrollHeight;
   }
 
-  function showTyping() {
+  function addFileMessage(filename) {
     const div = document.createElement('div');
-    div.className = 'typingIndicator bubble-ai rounded-lg rounded-tl-none px-3.5 py-2.5 max-w-[85%] text-sm flex gap-1 items-center';
-    div.innerHTML = '<span class="typing-dot w-1.5 h-1.5 bg-blue rounded-full"></span><span class="typing-dot w-1.5 h-1.5 bg-blue rounded-full"></span><span class="typing-dot w-1.5 h-1.5 bg-blue rounded-full"></span>';
+    div.className = 'bubble-user rounded-lg rounded-tr-none px-3.5 py-2.5 max-w-[85%] text-sm ml-auto flex items-center gap-2';
+    div.innerHTML = '<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a5 5 0 01-7.07-7.07l9.19-9.19a3.5 3.5 0 014.95 4.95l-9.19 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg><span></span>';
+    div.querySelector('span').textContent = filename;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function showTyping(recognizing) {
+    const div = document.createElement('div');
+    div.className = 'typingIndicator bubble-ai rounded-lg rounded-tl-none px-3.5 py-2.5 max-w-[85%] text-sm flex gap-2 items-center';
+    const label = recognizing ? (
+      currentLang === 'en' ? 'Reading document...' :
+      currentLang === 'uz' ? "Hujjat o'qilyapti..." :
+      currentLang === 'zh' ? '正在读取文件...' :
+      'Распознаю документ...'
+    ) : '';
+    div.innerHTML = (label ? `<span class="text-xs text-slate-soft">${label}</span>` : '') +
+      '<span class="typing-dot w-1.5 h-1.5 bg-blue rounded-full"></span><span class="typing-dot w-1.5 h-1.5 bg-blue rounded-full"></span><span class="typing-dot w-1.5 h-1.5 bg-blue rounded-full"></span>';
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
     return div;
   }
 
+  function renderPreview() {
+    if (!preview) return;
+    if (!pendingFile) {
+      preview.classList.add('hidden');
+      preview.innerHTML = '';
+      return;
+    }
+    preview.classList.remove('hidden');
+    preview.innerHTML = '';
+    const chip = document.createElement('div');
+    chip.className = 'inline-flex items-center gap-2 bg-blue/10 border border-blue/30 rounded px-2.5 py-1.5 text-xs text-white/85 max-w-full';
+    chip.innerHTML = '<svg class="w-3.5 h-3.5 text-blue shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a5 5 0 01-7.07-7.07l9.19-9.19a3.5 3.5 0 014.95 4.95l-9.19 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>' +
+      `<span class="truncate">${pendingFile.name}</span>` +
+      '<button type="button" class="text-slate-soft hover:text-white ml-1" aria-label="Remove attachment">&times;</button>';
+    chip.querySelector('button').addEventListener('click', () => {
+      pendingFile = null;
+      if (fileInput) fileInput.value = '';
+      renderPreview();
+    });
+    preview.appendChild(chip);
+  }
+
+  if (attachBtn && fileInput) {
+    attachBtn.setAttribute('title', attachLabel());
+    attachBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+      if (!ALLOWED_ATTACHMENT_TYPES.includes(file.type)) {
+        alert(
+          currentLang === 'en' ? 'Please attach a PDF or image (JPG/PNG/WEBP) file.' :
+          currentLang === 'uz' ? "Iltimos, PDF yoki rasm (JPG/PNG/WEBP) fayl biriktiring." :
+          currentLang === 'zh' ? '请附上PDF或图片（JPG/PNG/WEBP）文件。' :
+          'Пожалуйста, прикрепите файл PDF или изображение (JPG/PNG/WEBP).'
+        );
+        fileInput.value = '';
+        return;
+      }
+      if (file.size > MAX_ATTACHMENT_MB * 1024 * 1024) {
+        alert(
+          currentLang === 'en' ? `File is too large. Max ${MAX_ATTACHMENT_MB} MB.` :
+          currentLang === 'uz' ? `Fayl juda katta. Maksimal ${MAX_ATTACHMENT_MB} MB.` :
+          currentLang === 'zh' ? `文件太大。最大 ${MAX_ATTACHMENT_MB} MB。` :
+          `Файл слишком большой. Максимум ${MAX_ATTACHMENT_MB} МБ.`
+        );
+        fileInput.value = '';
+        return;
+      }
+      pendingFile = file;
+      renderPreview();
+    });
+  }
+
   async function handleChat() {
     const text = input.value.trim();
-    if (!text) return;
-    addMessage(text, true);
-    history.push({ role: 'user', content: text });
+    const file = pendingFile;
+    if (!text && !file) return;
+
+    // Fallback text so the turn always has content, even file-only sends.
+    const effectiveText = text || (
+      currentLang === 'en' ? 'I am attaching a document about my shipment.' :
+      currentLang === 'uz' ? "Yukim bo'yicha hujjat biriktiryapman." :
+      currentLang === 'zh' ? '我附上了一份关于货物的文件。' :
+      'Прикрепляю документ по моему грузу.'
+    );
+
+    if (text) addMessage(text, true);
+    if (file) addFileMessage(file.name);
+    history.push({ role: 'user', content: effectiveText });
+
     input.value = '';
+    pendingFile = null;
+    if (fileInput) fileInput.value = '';
+    renderPreview();
     input.disabled = true;
     send.disabled = true;
-    const typingEl = showTyping();
+    if (attachBtn) attachBtn.disabled = true;
+    const typingEl = showTyping(Boolean(file));
 
     try {
-      const res = await fetch(`${API_BASE}/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: history, lang: currentLang })
-      });
+      const fd = new FormData();
+      fd.append('messages', JSON.stringify(history));
+      fd.append('lang', currentLang);
+      if (file) fd.append('file', file, file.name);
+
+      const res = await fetch(`${API_BASE}/chat`, { method: 'POST', body: fd });
       if (!res.ok) throw new Error('Bad response: ' + res.status);
       const data = await res.json();
       typingEl.remove();
@@ -182,6 +282,7 @@ function createChatController(inputId, sendId, messagesId) {
     } finally {
       input.disabled = false;
       send.disabled = false;
+      if (attachBtn) attachBtn.disabled = false;
       input.focus();
     }
   }
@@ -191,8 +292,8 @@ function createChatController(inputId, sendId, messagesId) {
   return { handleChat };
 }
 
-createChatController('chatInput', 'chatSend', 'chatMessages');           // homepage teaser widget
-createChatController('chatInput2', 'chatSend2', 'chatMessages2');        // full-screen /ai-assistant widget
+createChatController('chatInput', 'chatSend', 'chatMessages', 'chatFile', 'chatAttachBtn', 'chatAttachPreview');             // homepage teaser widget
+createChatController('chatInput2', 'chatSend2', 'chatMessages2', 'chatFile2', 'chatAttachBtn2', 'chatAttachPreview2');       // full-screen /ai-assistant widget
 
 // ============================================================
 // RFQ FORM — real submission to backend (POST {API_BASE}/rfq)
