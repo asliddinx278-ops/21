@@ -98,7 +98,7 @@ document.getElementById('menuBtn')?.addEventListener('click', () => {
 });
 
 // ============================================================
-// AI CARGO ASSISTANT — real Claude API integration via backend
+// AI CARGO ASSISTANT — real OpenAI API integration via backend
 // (POST {API_BASE}/chat). Wired to BOTH chat widgets on the
 // page: the small teaser on the homepage (#chatInput/#chatSend/
 // #chatMessages) and the full-screen one on the AI Assistant
@@ -440,7 +440,7 @@ const translations = {
     'case3.k1': 'Груз', 'case3.k2': 'Транзит', 'case3.k3': 'Результат',
     'ai.title': 'Тариф за <span class="text-blue">5 минут</span>. С помощью AI.',
     'ai.text': 'AI Cargo Assistant принимает RFQ 24/7, классифицирует тип груза, собирает данные о маршруте и передаёт заявку менеджеру и в Telegram. Работает на RU и EN.',
-    'ai.p1': 'Claude API — умная классификация типа груза',
+    'ai.p1': 'OpenAI API — умная классификация типа груза',
     'ai.p2': 'Автоматический сбор данных: маршрут, вес, размеры',
     'ai.p3': 'Уведомления в Telegram + Email',
     'ai.p4': 'RU / EN сейчас · ZH скоро',
@@ -492,7 +492,7 @@ const translations = {
     'aip.step3_t': 'Заявка передаётся команде',
     'aip.step3_d': 'Готовый RFQ уходит менеджеру и в Telegram бот. Ответ — в течение 2–4 часов.',
     'aip.cta_rfq': 'Заполнить полную RFQ форму',
-    'aip.disclaimer': 'Защищено reCAPTCHA · Данные конфиденциальны · Реальная интеграция с Claude API',
+    'aip.disclaimer': 'Защищено reCAPTCHA · Данные конфиденциальны · Реальная интеграция с OpenAI API',
   },
   en: {
     'hdr.sub': 'Air Cargo · Transit · Central Asia',
@@ -556,7 +556,7 @@ const translations = {
     'case3.k1': 'Cargo', 'case3.k2': 'Transit', 'case3.k3': 'Result',
     'ai.title': 'Quote in <span class="text-blue">5 minutes</span>. Powered by AI.',
     'ai.text': 'AI Cargo Assistant handles RFQ 24/7, classifies cargo type, collects route data and forwards to manager and Telegram. Works in EN and RU.',
-    'ai.p1': 'Claude API — smart cargo type classification',
+    'ai.p1': 'OpenAI API — smart cargo type classification',
     'ai.p2': 'Automatic data collection: route, weight, dimensions',
     'ai.p3': 'Telegram + Email notifications',
     'ai.p4': 'EN / RU now · ZH coming soon',
@@ -608,7 +608,7 @@ const translations = {
     'aip.step3_t': 'Request goes to the team',
     'aip.step3_d': 'The finished RFQ is sent to a manager and our Telegram bot. Response within 2–4 hours.',
     'aip.cta_rfq': 'Fill in the full RFQ form',
-    'aip.disclaimer': 'Protected by reCAPTCHA · Data confidential · Real integration with Claude API',
+    'aip.disclaimer': 'Protected by reCAPTCHA · Data confidential · Real integration with OpenAI API',
   },
   uz: {
     'hdr.sub': 'Aviakargo · Tranzit · Markaziy Osiyo',
@@ -638,7 +638,7 @@ const translations = {
     'faq.title': 'Tez-tez so\'raladigan savollar',
     'ftr.nav': 'Navigatsiya', 'ftr.svc': 'Xizmatlar', 'ftr.contact': 'Kontaktlar',
     'ai.text': 'AI Cargo Assistant 24/7 rejimida RFQ qabul qiladi, yuk turini klassifikatsiya qiladi, marshrut ma\'lumotlarini yig\'adi va menejer hamda Telegram\'ga yuboradi. RU va EN tillarida ishlaydi.',
-    'ai.p1': 'Claude API — yuk turini aqlli klassifikatsiya qilish',
+    'ai.p1': 'OpenAI API — yuk turini aqlli klassifikatsiya qilish',
     'ai.p2': 'Avtomatik ma\'lumot yig\'ish: marshrut, og\'irlik, o\'lchamlar',
     'ai.p3': 'Telegram + Email orqali bildirishnomalar',
     'ai.p4': 'Hozircha RU / EN · ZH tez orada',
@@ -785,7 +785,7 @@ const translations = {
     'aip.step3_t': 'So\'rov jamoaga uzatiladi',
     'aip.step3_d': 'Tayyor RFQ menejer va Telegram botga yuboriladi. Javob — 2–4 soat ichida.',
     'aip.cta_rfq': 'To\'liq RFQ formasini to\'ldirish',
-    'aip.disclaimer': 'reCAPTCHA bilan himoyalangan · Ma\'lumotlar maxfiy · Claude API bilan haqiqiy integratsiya',
+    'aip.disclaimer': 'reCAPTCHA bilan himoyalangan · Ma\'lumotlar maxfiy · OpenAI API bilan haqiqiy integratsiya',
   },
   zh: {
     'hdr.sub': '航空货运 · 中转 · 中亚',
@@ -811,7 +811,7 @@ const translations = {
     'faq.title': '常见问题',
     'ftr.nav': '导航', 'ftr.svc': '服务', 'ftr.contact': '联系',
     'ai.text': 'AI货运助手全天候受理询价,对货物类型进行分类,收集路线信息并转交给经理和Telegram。目前支持俄语和英语。',
-    'ai.p1': 'Claude API —— 智能货物类型分类',
+    'ai.p1': 'OpenAI API —— 智能货物类型分类',
     'ai.p2': '自动收集数据:路线、重量、尺寸',
     'ai.p3': 'Telegram + 邮件通知',
     'ai.p4': '目前支持俄语/英语 · 中文即将上线',
@@ -966,7 +966,7 @@ const translations = {
     'aip.step3_t': '请求发送给团队',
     'aip.step3_d': '完成的询价单将发送给客服经理和我们的Telegram机器人。2-4小时内回复。',
     'aip.cta_rfq': '填写完整询价表',
-    'aip.disclaimer': '受reCAPTCHA保护 · 数据保密 · 与Claude API的真实集成',
+    'aip.disclaimer': '受reCAPTCHA保护 · 数据保密 · 与OpenAI API的真实集成',
   }
 };
 
