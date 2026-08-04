@@ -981,9 +981,14 @@ tailwind.config = {
               <div data-i18n="ai.chat1">Здравствуйте! Я AI Cargo Assistant. Расскажите о вашем грузе, и я помогу с расчётом тарифа. Откуда отправляем и куда?</div>
             </div>
           </div>
+          <div id="chatAttachPreview" class="hidden px-3 pt-2"></div>
           <div class="border-t border-border-soft p-3 flex items-center gap-2">
+            <input type="file" id="chatFile" accept=".pdf,.jpg,.jpeg,.png,.webp" class="hidden">
+            <button type="button" id="chatAttachBtn" class="w-8 h-8 shrink-0 border border-border-soft rounded flex items-center justify-center hover:border-blue transition" aria-label="Attach file" title="Attach document (packing list, invoice, MSDS)">
+              <svg class="w-4 h-4 text-slate-soft" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a5 5 0 01-7.07-7.07l9.19-9.19a3.5 3.5 0 014.95 4.95l-9.19 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+            </button>
             <input type="text" id="chatInput" data-i18n-ph="chat.placeholder" placeholder="Ask about your cargo..." aria-label="Ask about your cargo" class="flex-1 bg-transparent text-sm text-white/85 placeholder-slate-soft outline-none">
-            <button type="button" id="chatSend" class="w-8 h-8 bg-blue rounded flex items-center justify-center" aria-label="Send message" title="Send message">
+            <button type="button" id="chatSend" class="w-8 h-8 shrink-0 bg-blue rounded flex items-center justify-center" aria-label="Send message" title="Send message">
               <svg class="w-4 h-4 text-ink" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
             </button>
           </div>
@@ -1238,9 +1243,14 @@ tailwind.config = {
               <div data-i18n="ai.chat1">Здравствуйте! Я AI Cargo Assistant. Расскажите о вашем грузе, и я помогу с расчётом тарифа. Откуда отправляем и куда?</div>
             </div>
           </div>
+          <div id="chatAttachPreview2" class="hidden px-4 pt-2"></div>
           <div class="border-t border-border-soft p-3 flex items-center gap-2">
+            <input type="file" id="chatFile2" accept=".pdf,.jpg,.jpeg,.png,.webp" class="hidden">
+            <button type="button" id="chatAttachBtn2" class="w-8 h-8 shrink-0 border border-border-soft rounded flex items-center justify-center hover:border-blue transition" aria-label="Attach file" title="Attach document (packing list, invoice, MSDS)">
+              <svg class="w-4 h-4 text-slate-soft" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a5 5 0 01-7.07-7.07l9.19-9.19a3.5 3.5 0 014.95 4.95l-9.19 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+            </button>
             <input type="text" id="chatInput2" data-i18n-ph="chat.placeholder" placeholder="Ask about your cargo..." aria-label="Ask about your cargo" class="flex-1 bg-transparent text-sm text-white/85 placeholder-slate-soft outline-none">
-            <button type="button" id="chatSend2" class="w-8 h-8 bg-blue rounded flex items-center justify-center" aria-label="Send message" title="Send message">
+            <button type="button" id="chatSend2" class="w-8 h-8 shrink-0 bg-blue rounded flex items-center justify-center" aria-label="Send message" title="Send message">
               <svg class="w-4 h-4 text-ink" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
             </button>
           </div>
